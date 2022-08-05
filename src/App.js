@@ -5,7 +5,7 @@ import trash from "../src/Trash.png";
 export const Box = styled.div`
   background-image: linear-gradient(180deg, #00e6e6, #003080);
   padding: 2em;
-  height: 20em;
+  height: 40em;
   border-radius: 1em;
 `;
 
@@ -13,10 +13,13 @@ export const List = styled.div`
   display: flex;
   flex-direction: column;
   background-color: white;
-  height: 15em;
+  max-width: 1000px;
+  margin: 0 auto;
+  height: 22em;
   overflow: scroll;
   border-radius: 1em;
   align-items: center;
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -27,14 +30,20 @@ export const TextList = styled.div`
   flex-direction: column;
   align-items: center;
   max-height: 50em;
+  justify-content: center;
   h1 {
     text-decoration: underline overline;
+    font-size: 2.5rem;
+    text-align: center;
   }
   input {
-    width: 10em;
+    width: 15em;
   }
   button {
-    width: 5em;
+    font-size: 1rem;
+    margin-top: 5px;
+    border-radius: 2em;
+    width: 10em;
     border: none;
     cursor: pointer;
     transition: 0.5s all;
@@ -48,6 +57,9 @@ export const Task = styled.div`
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 200px;
   margin-top: 1em;
   border-bottom: 1px solid gray;
   button {
@@ -70,16 +82,14 @@ export default class ToDo extends React.Component {
     taskList: []
   };
 
-  HandleChange = (event) => {
+  handleChange = (event) => {
     this.setState({
       task: event.target.value
     });
   };
 
   addTask = () => {
-    //this.state.task.length > 0 também funciona
-    //Lembrar de não adicionar com SPACE BAR  e ficar um elemento vazio
-    if (this.state.task !== "") {
+    if (this.state.task !== "" && !this.state.task.match(/^[  \t]+$/)) {
       this.setState({
         taskList: this.state.taskList.concat({
           task: this.state.task,
@@ -98,8 +108,21 @@ export default class ToDo extends React.Component {
     });
   };
 
+  cleanTasks = () => {
+    this.setState({
+      taskList: this.state.taskList.filter((item) => {
+        return item.id === "";
+      }),
+      task: ""
+    });
+  };
+
   handleKeyPress = (event) => {
-    if (event.key === "Enter" && this.state.task !== "") {
+    if (
+      event.key === "Enter" &&
+      !this.state.task.match(/^[  \t]+$/) &&
+      this.state.task !== ""
+    ) {
       this.setState({
         taskList: this.state.taskList.concat({
           task: this.state.task,
@@ -118,10 +141,11 @@ export default class ToDo extends React.Component {
             <h1>Lista de tarefas</h1>
             <input
               onKeyPress={this.handleKeyPress}
-              onChange={this.HandleChange}
+              onChange={this.handleChange}
               value={this.state.task}
             />
             <button onClick={this.addTask}>Adicionar</button>
+            <button onClick={this.cleanTasks}>Limpar Lista</button>
           </TextList>
           {this.state.taskList.map((item) => (
             <Task key={item.id}>
