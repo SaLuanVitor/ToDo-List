@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import trash from "../src/Trash.png";
 
 export const Box = styled.div`
   background-image: linear-gradient(180deg, #00e6e6, #003080);
@@ -126,7 +127,7 @@ export default class ToDo extends React.Component {
             <Task key={item.id}>
               <p>{item.task}</p>
               <button onClick={() => this.delTask(item.id)}>
-                <Img src="https://cdn-icons.flaticon.com/png/128/542/premium/542724.png?token=exp=1659671278~hmac=cc4393584cd48b406270301ba66faa59" />
+                <Img src={trash} />
               </button>
             </Task>
           ))}
